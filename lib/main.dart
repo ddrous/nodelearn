@@ -30,6 +30,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   List<List<String>> datasets = [];
+  List<List<String>> models = [];
   List<List<String>> losses = [];
   List<List<String>> accuracies = [];
   List<List<String>> predictions = [];
@@ -39,8 +40,8 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    datasets.add(["MNIST", ""]);
-    datasets.add(["Fasion MNIST", "selected"]);
+    datasets.add(["MNIST", "selected"]);
+    datasets.add(["Fashion MNIST", ""]);
     datasets.add(["SVHN", ""]);
     datasets.add(["CIFAR-10", ""]);
     datasets.add(["Cats vs Dogs", ""]);
@@ -48,6 +49,12 @@ class HomePageState extends State<HomePage> {
     datasets.add(["Celeb-A", ""]);
     datasets.add(["Youtube-8M", ""]);
     datasets.add(["Jeopardy", ""]);
+
+    models.add(["Statitical", ""]);
+    models.add(["Dense Neural Network", "selected"]);
+    models.add(["Convolutional NN", ""]);
+    models.add(["Recurrent NN", ""]);
+    models.add(["SVM", ""]);
 
     losses.add(["MSE", "selected"]);
     losses.add(["MAE", ""]);
@@ -72,7 +79,7 @@ class HomePageState extends State<HomePage> {
     var padding = MediaQuery.of(context).padding;
     double safeheight = screenheight - padding.top - padding.bottom;
 
-    double listheight = safeheight / 6;
+    double listheight = safeheight / 8;
     double listwidth = screenwidth / 2;
 
     void _trainModel() {}
@@ -101,9 +108,18 @@ class HomePageState extends State<HomePage> {
                 height: listheight,
                 width: listwidth,
                 child: ScrollableList(
-                  items: losses,
+                  items: models,
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.lightGreen,
+                ),
+              ),
+              SizedBox(
+                height: listheight,
+                width: listwidth,
+                child: ScrollableList(
+                  items: losses,
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.lightBlue,
                 ),
               ),
               FloatingActionButton(
@@ -117,7 +133,7 @@ class HomePageState extends State<HomePage> {
                 child: ScrollableList(
                   items: predictions,
                   backgroundColor: Colors.white,
-                  foregroundColor: Colors.lightBlue,
+                  foregroundColor: Colors.orange,
                 ),
               ),
               FloatingActionButton(
@@ -163,16 +179,25 @@ class ScrollableListState extends State<ScrollableList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+        // TODO use ListWheelScrollView instead
         scrollDirection: Axis.horizontal,
         itemCount: widget.items.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             behavior: HitTestBehavior.opaque,
             child: Container(
+              decoration: BoxDecoration(
+                color: widget.items[index][1] == "selected"
+                    ? widget.foregroundColor
+                    : widget.backgroundColor,
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(8.0),
+                ),
+              ),
               height: 80,
-              color: widget.items[index][1] == "selected"
-                  ? widget.foregroundColor
-                  : widget.backgroundColor,
+              width: 200,
+              padding: const EdgeInsets.all(8),
+              margin: const EdgeInsets.all(4),
               child: Center(child: Text(widget.items[index][0])),
             ),
             onTap: () {
